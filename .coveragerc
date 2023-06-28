@@ -1,0 +1,10 @@
+[run]
+omit = main.py,
+    src/db.py,
+    src/exceptions.py,
+    src/middlewares.py,
+    src/pd.py,
+    src/permissions.py,
+    src/settings.py,
+    src/api.py,
+    __init__.py,

@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+
+  fastapi_online_store:
+    image: fastapi_online_store
+    command: /bin/sh -c "alembic upgrade head && python main.py"
+    env_file:
+      - .env
+    ports:
+      - "${PORT:-8000}:8000"
+    expose:
+      - "${PORT:-8000}"
+    restart: always
+    volumes:
+      - "${STATIC_FILES_VOLUME:?err}:/fastapi_online_store/static_files"
+      - "${LOGS_VOLUME:?err}:/fastapi_online_store/logs"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.3
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - "${POSTGRES_DATA_VOLUME:?err}:/var/lib/postgresql/data"
+
+  redis:
+    image: redis:latest
+    command: ["redis-server", "/redis.conf"]
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - "./redis.conf:/redis.conf"
+      - "${REDIS_DATA_VOLUME:?err}:/data"
